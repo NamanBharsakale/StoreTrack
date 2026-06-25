@@ -1,0 +1,10 @@
+target/
+*.war
+*.class
+.env
+*.iml
+.idea/
+.DS_Store
+.claude/
+prep/
+.directory
