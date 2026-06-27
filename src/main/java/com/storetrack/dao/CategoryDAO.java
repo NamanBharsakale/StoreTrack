@@ -62,6 +62,15 @@ public class CategoryDAO {
         }
     }
 
+    public int getTotalCount() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM categories";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            return rs.next() ? rs.getInt(1) : 0;
+        }
+    }
+
     public boolean hasProducts(int categoryId) throws SQLException {
         String sql = "SELECT 1 FROM products WHERE category_id = ? LIMIT 1";
         try (Connection conn = DBConnection.getConnection();

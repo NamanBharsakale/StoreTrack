@@ -36,7 +36,7 @@ public class DashboardServlet extends HttpServlet {
         try {
             Map<String, Object> todayStats = saleDAO.getTodayStats();
             req.setAttribute("totalProducts",   productDAO.getTotalCount());
-            req.setAttribute("totalCategories", categoryDAO.getAll().size());
+            req.setAttribute("totalCategories", categoryDAO.getTotalCount());
             req.setAttribute("totalSuppliers",  supplierDAO.getTotalCount());
             req.setAttribute("todaySalesCount", todayStats.get("totalSales"));
             req.setAttribute("todayRevenue",    todayStats.get("revenue"));
