@@ -97,26 +97,46 @@ Or use the Railway shell inside the MySQL plugin.
 
 ### 5. Deploy
 
-Railway detects the `Dockerfile` and builds automatically on every push to `main`.
+Railway detects the `Dockerfile` and builds automatically on every push to `master`.
+The build is fully self-contained — the first stage compiles the WAR with Maven,
+so nothing needs to be built locally before pushing.
 
-Build command (Railway runs this automatically):
-```bash
-mvn clean package
-```
+The WAR is deployed as `ROOT.war`, so the app serves at `/` on the
+Railway-provided domain.
 
-The Dockerfile then copies `target/StoreTrack-1.0.0.war` into Tomcat as `ROOT.war`,
-so the app serves at `/` on the Railway-provided domain.
+### 6. Get the public URL
+
+- In the Railway service → Settings → Networking → **Generate Domain**
+- Set the target port to `8080`
+- Railway gives you a URL like `https://storetrack-production-xxxx.up.railway.app`
 
 ---
 
 ## Dockerfile
 
 ```dockerfile
+FROM maven:3.9-eclipse-temurin-17 AS build
+WORKDIR /app
+COPY pom.xml .
+RUN mvn -q dependency:go-offline
+COPY src ./src
+RUN mvn -q clean package
+
 FROM tomcat:10.1-jdk17
 RUN rm -rf /usr/local/tomcat/webapps/*
-COPY target/StoreTrack-1.0.0.war /usr/local/tomcat/webapps/ROOT.war
+COPY --from=build /app/target/StoreTrack-1.0.0.war /usr/local/tomcat/webapps/ROOT.war
 EXPOSE 8080
 CMD ["catalina.sh", "run"]
+```
+
+To run the container locally against any MySQL:
+
+```bash
+docker build -t storetrack .
+docker run -p 8080:8080 \
+  -e DB_URL="jdbc:mysql://<host>:<port>/storetrack?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC" \
+  -e DB_USER=root -e DB_PASSWORD=<password> \
+  storetrack
 ```
 
 ---
