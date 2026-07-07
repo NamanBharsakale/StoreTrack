@@ -34,7 +34,8 @@ CREATE TABLE IF NOT EXISTS products (
     min_quantity  INT            DEFAULT 5,
     unit          VARCHAR(20)    DEFAULT 'pcs',
     created_at    TIMESTAMP      DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (category_id) REFERENCES categories(id)
+    FOREIGN KEY (category_id) REFERENCES categories(id),
+    INDEX idx_products_category (category_id)
 );
 
 -- Suppliers
@@ -57,7 +58,8 @@ CREATE TABLE IF NOT EXISTS stock_entries (
     added_date     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (product_id)  REFERENCES products(id),
     FOREIGN KEY (supplier_id) REFERENCES suppliers(id),
-    FOREIGN KEY (added_by)    REFERENCES users(id)
+    FOREIGN KEY (added_by)    REFERENCES users(id),
+    INDEX idx_stock_product (product_id)
 );
 
 -- Sales
@@ -67,7 +69,8 @@ CREATE TABLE IF NOT EXISTS sales (
     total_amount DECIMAL(10,2) NOT NULL,
     tax_amount   DECIMAL(10,2) DEFAULT 0.00,
     sale_date    TIMESTAMP     DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (cashier_id) REFERENCES users(id)
+    FOREIGN KEY (cashier_id) REFERENCES users(id),
+    INDEX idx_sales_date (sale_date)
 );
 
 -- Sale Items
@@ -79,15 +82,10 @@ CREATE TABLE IF NOT EXISTS sale_items (
     unit_price DECIMAL(10,2) NOT NULL,
     subtotal   DECIMAL(10,2) NOT NULL,
     FOREIGN KEY (sale_id)    REFERENCES sales(id),
-    FOREIGN KEY (product_id) REFERENCES products(id)
+    FOREIGN KEY (product_id) REFERENCES products(id),
+    INDEX idx_sale_items_sale (sale_id),
+    INDEX idx_sale_items_product (product_id)
 );
-
--- Performance indexes
-CREATE INDEX IF NOT EXISTS idx_products_category  ON products(category_id);
-CREATE INDEX IF NOT EXISTS idx_stock_product       ON stock_entries(product_id);
-CREATE INDEX IF NOT EXISTS idx_sale_items_sale     ON sale_items(sale_id);
-CREATE INDEX IF NOT EXISTS idx_sale_items_product  ON sale_items(product_id);
-CREATE INDEX IF NOT EXISTS idx_sales_date          ON sales(sale_date);
 
 -- Seed: default admin — password is "admin123"
 INSERT IGNORE INTO users (name, email, password, role)
