@@ -15,11 +15,48 @@ Install these before starting:
 | MySQL | 8.x | https://dev.mysql.com/downloads/mysql/ |
 | Apache Tomcat | 10.1.x | https://tomcat.apache.org/download-10.cgi |
 
+### Installing on Ubuntu / Debian
+
+With sudo access:
+
+```bash
+sudo apt update
+sudo apt install openjdk-17-jdk maven mysql-server
+```
+
+Tomcat is easiest as a plain download (the apt package changes paths and permissions):
+
+```bash
+curl -sSL -o /tmp/tomcat.tar.gz https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.34/bin/apache-tomcat-10.1.34.tar.gz
+mkdir -p ~/tools && tar xzf /tmp/tomcat.tar.gz -C ~/tools
+```
+
+### Installing without sudo (user-level)
+
+Both Maven and Tomcat are just tarballs — no root needed:
+
+```bash
+mkdir -p ~/tools
+curl -sSL https://archive.apache.org/dist/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz | tar xz -C ~/tools
+curl -sSL https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.34/bin/apache-tomcat-10.1.34.tar.gz | tar xz -C ~/tools
+```
+
+Then add them to your shell profile (`~/.bashrc`):
+
+```bash
+export MAVEN_HOME="$HOME/tools/apache-maven-3.9.9"
+export CATALINA_HOME="$HOME/tools/apache-tomcat-10.1.34"
+export PATH="$MAVEN_HOME/bin:$PATH"
+```
+
+Reload with `source ~/.bashrc`.
+
 Verify installations:
 ```bash
 java -version      # should say openjdk 17...
 mvn -version       # should say Apache Maven 3.9...
 mysql --version    # should say 8.x...
+$CATALINA_HOME/bin/version.sh   # should say Apache Tomcat/10.1.x
 ```
 
 ---
@@ -130,7 +167,7 @@ cp target/StoreTrack-1.0.0.war /path/to/tomcat/webapps/
 ```
 
 Replace `/path/to/tomcat` with your actual Tomcat installation path, e.g.:
-- Linux: `/opt/tomcat` or `~/apache-tomcat-10.1.x`
+- Linux: `/opt/tomcat` or `~/tools/apache-tomcat-10.1.34` (if installed as above)
 - macOS: `~/apache-tomcat-10.1.x`
 - Windows: `C:\tomcat`
 
@@ -198,6 +235,7 @@ After logging in as Admin, go to **Users → Add User** to create:
 |-------|-------|-----|
 | `Communications link failure` | MySQL not running or wrong port | Start MySQL: `sudo systemctl start mysql` |
 | `Access denied for user 'root'` | Wrong DB_PASSWORD | Re-check the env var value |
+| `Public Key Retrieval is not allowed` | MySQL 8 `caching_sha2_password` over non-SSL | Add `allowPublicKeyRetrieval=true` to DB_URL (already in the examples above) |
 | `java.lang.ClassNotFoundException: com.mysql.cj.jdbc.Driver` | mysql-connector JAR missing | Run `mvn clean package` again |
 | `HTTP 404` on `/StoreTrack` | WAR not deployed or Tomcat not restarted | Check `webapps/` folder, restart Tomcat |
 | JSP shows raw tags (`${variable}`) | JSTL runtime missing | Ensure `glassfish` dependency is in pom.xml — it should be |
