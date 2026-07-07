@@ -44,7 +44,9 @@ public class UserServlet extends HttpServlet {
             res.sendRedirect(req.getContextPath() + "/login");
             return;
         }
-        if ("save".equals(req.getParameter("action"))) saveUser(req, res);
+        String action = req.getParameter("action");
+        if ("save".equals(action)) saveUser(req, res);
+        else if ("reset".equals(action)) resetPassword(req, res);
         else listUsers(req, res);
     }
 
@@ -82,6 +84,22 @@ public class UserServlet extends HttpServlet {
         } catch (Exception e) {
             req.setAttribute("error", "Failed to add user: " + e.getMessage());
             req.getRequestDispatcher("/users/add.jsp").forward(req, res);
+        }
+    }
+
+    private void resetPassword(HttpServletRequest req, HttpServletResponse res)
+            throws IOException {
+        try {
+            int id = Integer.parseInt(req.getParameter("id"));
+            String password = req.getParameter("password");
+            if (password == null || password.trim().length() < 6) {
+                res.sendRedirect(req.getContextPath() + "/users?error=Password+must+be+at+least+6+characters");
+                return;
+            }
+            userDAO.resetPassword(id, PasswordUtil.hash(password));
+            res.sendRedirect(req.getContextPath() + "/users?success=Password+reset+successfully");
+        } catch (Exception e) {
+            res.sendRedirect(req.getContextPath() + "/users?error=Failed+to+reset+password");
         }
     }
 

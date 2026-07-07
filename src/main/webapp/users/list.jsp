@@ -74,6 +74,11 @@
                                 <td><fmt:formatDate value="${u.createdAt}" pattern="dd MMM yyyy"/></td>
                                 <td>
                                     <c:if test="${u.id != sessionScope.userId}">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                data-bs-toggle="modal" data-bs-target="#resetModal${u.id}"
+                                                title="Reset password">
+                                            <i class="bi bi-key"></i>
+                                        </button>
                                         <c:choose>
                                             <c:when test="${u.isActive == 1}">
                                                 <a href="${pageContext.request.contextPath}/users?action=toggle&id=${u.id}&active=0"
@@ -89,6 +94,27 @@
                                                 </a>
                                             </c:otherwise>
                                         </c:choose>
+                                        <div class="modal fade" id="resetModal${u.id}" tabindex="-1">
+                                            <div class="modal-dialog modal-sm">
+                                                <form class="modal-content" method="post"
+                                                      action="${pageContext.request.contextPath}/users?action=reset">
+                                                    <input type="hidden" name="id" value="${u.id}">
+                                                    <div class="modal-header">
+                                                        <h6 class="modal-title">Reset Password — <c:out value="${u.name}"/></h6>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <label class="form-label" for="password${u.id}">New Password</label>
+                                                        <input type="password" class="form-control" id="password${u.id}"
+                                                               name="password" minlength="6" required>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-sm btn-brand">Reset</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </c:if>
                                 </td>
                             </tr>
