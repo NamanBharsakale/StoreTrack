@@ -109,7 +109,7 @@ public class ProductServlet extends HttpServlet {
             res.sendRedirect(req.getContextPath() + "/products?success=Product+added+successfully");
         } catch (Exception e) {
             req.setAttribute("error", "Failed to add product: " + e.getMessage());
-            req.setAttribute("categories", categoryDAO.getAll());
+            loadCategories(req);
             req.getRequestDispatcher("/products/add.jsp").forward(req, res);
         }
     }
@@ -123,7 +123,7 @@ public class ProductServlet extends HttpServlet {
             res.sendRedirect(req.getContextPath() + "/products?success=Product+updated");
         } catch (Exception e) {
             req.setAttribute("error", "Failed to update product: " + e.getMessage());
-            req.setAttribute("categories", categoryDAO.getAll());
+            loadCategories(req);
             req.getRequestDispatcher("/products/edit.jsp").forward(req, res);
         }
     }
@@ -140,6 +140,14 @@ public class ProductServlet extends HttpServlet {
             res.sendRedirect(req.getContextPath() + "/products?success=Product+deleted");
         } catch (Exception e) {
             res.sendRedirect(req.getContextPath() + "/products?error=" + e.getMessage());
+        }
+    }
+
+    private void loadCategories(HttpServletRequest req) {
+        try {
+            req.setAttribute("categories", categoryDAO.getAll());
+        } catch (Exception e) {
+            req.setAttribute("categories", java.util.Collections.emptyList());
         }
     }
 

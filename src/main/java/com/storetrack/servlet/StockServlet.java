@@ -87,8 +87,13 @@ public class StockServlet extends HttpServlet {
             res.sendRedirect(req.getContextPath() + "/stock?success=Stock+entry+added");
         } catch (Exception e) {
             req.setAttribute("error", "Failed to add stock: " + e.getMessage());
-            req.setAttribute("products",  productDAO.getAll());
-            req.setAttribute("suppliers", supplierDAO.getAll());
+            try {
+                req.setAttribute("products",  productDAO.getAll());
+                req.setAttribute("suppliers", supplierDAO.getAll());
+            } catch (Exception ex) {
+                req.setAttribute("products",  java.util.Collections.emptyList());
+                req.setAttribute("suppliers", java.util.Collections.emptyList());
+            }
             req.getRequestDispatcher("/stock/add.jsp").forward(req, res);
         }
     }
