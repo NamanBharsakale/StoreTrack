@@ -71,21 +71,21 @@ StoreTrack reads DB credentials from environment variables. Set them in your ter
 
 **Linux / macOS:**
 ```bash
-export DB_URL="jdbc:mysql://localhost:3306/storetrack?useSSL=false&serverTimezone=UTC"
+export DB_URL="jdbc:mysql://localhost:3306/storetrack?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
 export DB_USER="root"
 export DB_PASSWORD="your_mysql_password"
 ```
 
 **Windows (Command Prompt):**
 ```cmd
-set DB_URL=jdbc:mysql://localhost:3306/storetrack?useSSL=false&serverTimezone=UTC
+set DB_URL=jdbc:mysql://localhost:3306/storetrack?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
 set DB_USER=root
 set DB_PASSWORD=your_mysql_password
 ```
 
 **Windows (PowerShell):**
 ```powershell
-$env:DB_URL="jdbc:mysql://localhost:3306/storetrack?useSSL=false&serverTimezone=UTC"
+$env:DB_URL="jdbc:mysql://localhost:3306/storetrack?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
 $env:DB_USER="root"
 $env:DB_PASSWORD="your_mysql_password"
 ```
@@ -97,7 +97,7 @@ $env:DB_PASSWORD="your_mysql_password"
 **setenv.sh example:**
 ```bash
 #!/bin/bash
-export DB_URL="jdbc:mysql://localhost:3306/storetrack?useSSL=false&serverTimezone=UTC"
+export DB_URL="jdbc:mysql://localhost:3306/storetrack?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
 export DB_USER="root"
 export DB_PASSWORD="your_mysql_password"
 ```

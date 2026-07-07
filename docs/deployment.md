@@ -29,7 +29,7 @@ Default credentials:
 Create a `.env` file in the project root (gitignored):
 
 ```
-DB_URL=jdbc:mysql://localhost:3306/storetrack?useSSL=false&serverTimezone=UTC
+DB_URL=jdbc:mysql://localhost:3306/storetrack?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
 DB_USER=root
 DB_PASSWORD=yourpassword
 ```
@@ -37,7 +37,7 @@ DB_PASSWORD=yourpassword
 Export before running Tomcat (or set in Tomcat's `setenv.sh`):
 
 ```bash
-export DB_URL="jdbc:mysql://localhost:3306/storetrack?useSSL=false&serverTimezone=UTC"
+export DB_URL="jdbc:mysql://localhost:3306/storetrack?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
 export DB_USER="root"
 export DB_PASSWORD="yourpassword"
 ```
@@ -78,7 +78,7 @@ Access: `http://localhost:8080/StoreTrack`
 In Railway → Variables, add:
 
 ```
-DB_URL      = jdbc:mysql://<host>:<port>/railway?useSSL=false&serverTimezone=UTC
+DB_URL      = jdbc:mysql://<host>:<port>/railway?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
 DB_USER     = root
 DB_PASSWORD = <railway-provided-password>
 ```
