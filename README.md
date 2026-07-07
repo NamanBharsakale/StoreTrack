@@ -38,6 +38,24 @@ Built with plain Java (Servlets + JSP + JDBC) on purpose. No Spring, no Hibernat
 
 ## Getting Started
 
+### Quickest — Docker (one command)
+
+The only requirement is Docker:
+
+```bash
+git clone https://github.com/NamanBharsakale/StoreTrack.git
+cd StoreTrack
+docker compose up -d
+```
+
+This builds the app, starts MySQL, seeds the schema and demo data automatically,
+and serves at http://localhost:8080. Optional env vars: `DB_PASSWORD` (MySQL root
+password, default `storetrack`) and `APP_PORT` (host port, default `8080`).
+
+Stop with `docker compose down` (add `-v` to also wipe the database).
+
+### Manual — JDK + Maven + Tomcat
+
 You'll need JDK 17, Maven, MySQL 8, and Tomcat 10.1. Full step-by-step instructions are in [setup.md](setup.md), but the short version:
 
 ```bash

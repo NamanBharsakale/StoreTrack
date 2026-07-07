@@ -1,5 +1,48 @@
 # StoreTrack — Deployment Guide
 
+## One-Command Deployment (Docker Compose)
+
+Works on any machine or server with Docker installed — no JDK, Maven, MySQL,
+or Tomcat needed:
+
+```bash
+git clone https://github.com/NamanBharsakale/StoreTrack.git
+cd StoreTrack
+DB_PASSWORD=a-strong-password docker compose up -d
+```
+
+What it does:
+- builds the app image (Maven compiles the WAR inside Docker)
+- starts MySQL 8 and seeds it from `schema.sql` on first run (tables + admin user)
+- waits for the DB healthcheck, then starts the app on port 8080
+
+Access at `http://localhost:8080` (or `http://<server-ip>:8080` on a VPS).
+Login: `admin@storetrack.com` / `admin123` — change it after first login.
+
+| Env var | Default | Purpose |
+|---------|---------|---------|
+| `DB_PASSWORD` | `storetrack` | MySQL root password |
+| `APP_PORT` | `8080` | Host port the app is exposed on |
+
+Data persists in the `db-data` volume across restarts. Common commands:
+
+```bash
+docker compose logs -f app     # follow app logs
+docker compose up -d --build   # redeploy after a code change
+docker compose down            # stop (keeps data)
+docker compose down -v         # stop and delete the database
+```
+
+For a public HTTPS URL on a VPS, put a reverse proxy in front — e.g. Caddy:
+
+```
+storetrack.yourdomain.com {
+    reverse_proxy localhost:8080
+}
+```
+
+---
+
 ## Local Development
 
 ### Prerequisites
